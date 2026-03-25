@@ -1,0 +1,10 @@
+flask
+flask-cors
+transformers
+torch
+sentencepiece
+PyPDF2
+python-docx
+reportlab
+youtube-transcript-api
+gunicorn
