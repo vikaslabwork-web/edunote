@@ -4,18 +4,19 @@ from flask_cors import CORS
 from transformers import pipeline
 from docx import Document
 from PyPDF2 import PdfReader
-import os
 from youtube_transcript_api import YouTubeTranscriptApi
+import os
 import tempfile
 
 app = Flask(__name__)
 CORS(app)
 
-# Ensure Render picks the correct port
+# Use the port Render provides
 PORT = int(os.environ.get("PORT", 5000))
 
-# Load summarization pipeline (text2text for modern Transformers)
-summarizer = pipeline("text2text-generation", model="sshleifer/distilbart-cnn-12-6")
+# Initialize summarization pipeline
+# Use "text-to-text" task (works with latest Transformers)
+summarizer = pipeline("text-to-text", model="sshleifer/distilbart-cnn-12-6")
 
 # Max file upload size 16 MB
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
@@ -39,7 +40,6 @@ def extract_text_from_docx(file_path):
     return text
 
 def extract_text_from_youtube(video_url):
-    # Extract video ID from URL
     video_id = video_url.split("v=")[-1]
     transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
     text = " ".join([t['text'] for t in transcript_list])
@@ -90,7 +90,7 @@ def summarize_youtube_route():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-# ------------------- File Download Route Example -------------------
+# ------------------- File Download Routes -------------------
 
 @app.route("/download-docx", methods=["POST"])
 def download_docx():
