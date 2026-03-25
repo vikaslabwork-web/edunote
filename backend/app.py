@@ -1,4 +1,3 @@
-# app.py
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 from transformers import pipeline
@@ -14,9 +13,8 @@ CORS(app)
 # Use the port Render provides
 PORT = int(os.environ.get("PORT", 5000))
 
-# Initialize summarization pipeline
-# Use "text-to-text" task (works with latest Transformers)
-summarizer = pipeline("text-to-text", model="sshleifer/distilbart-cnn-12-6")
+# Initialize summarization pipeline (v4.34.0)
+summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
 
 # Max file upload size 16 MB
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
@@ -25,7 +23,7 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
 def summarize_text(text):
     summary = summarizer(text, max_length=150, min_length=30, do_sample=False)
-    return summary[0]['generated_text']
+    return summary[0]['summary_text']
 
 def extract_text_from_pdf(file_path):
     reader = PdfReader(file_path)
