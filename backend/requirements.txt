@@ -2,9 +2,8 @@ flask
 flask-cors
 transformers
 torch
-sentencepiece
-PyPDF2
 python-docx
-reportlab
+PyPDF2
 youtube-transcript-api
 gunicorn
+fpdf
